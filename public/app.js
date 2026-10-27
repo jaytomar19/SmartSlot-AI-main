@@ -125,7 +125,14 @@ function table(rows, cols) {
   return `<div class="table-wrap"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
 
-const header = (title, sub) => `<div class="main-header">${esc(title)}</div><div class="sub-header">${esc(sub)}</div>`;
+function header(title, sub) {
+  const group = NAV_GROUPS.find(([, ids]) => ids.includes(currentView()))?.[0] || "smartslot ai";
+  return `<header class="page-hero">
+      <div class="eyebrow">${esc(group)}</div>
+      <h1 class="main-header">${esc(title)}</h1>
+      <p class="sub-header">${esc(sub)}</p>
+    </header>`;
+}
 const alertBox = (kind, html) => `<div class="alert alert-${kind}">${html}</div>`;
 const metricCard = (value, label) => `<div class="metric-card"><div class="metric-value">${esc(value)}</div><div class="metric-label">${esc(label)}</div></div>`;
 const metric = (label, value) => `<div class="metric"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div></div>`;
