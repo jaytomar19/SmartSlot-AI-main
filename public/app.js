@@ -24,6 +24,14 @@ const VIEWS = [
   ["docs", "📖 Academic Viva & Algorithm Docs"],
 ];
 
+// Sidebar toggle groups (presentation only).
+const NAV_GROUPS = [
+  ["overview", ["dashboard"]],
+  ["school info", ["config", "faculty", "subjects", "classrooms"]],
+  ["ai planner", ["generator", "conflicts", "viewer", "benchmark"]],
+  ["resources", ["export", "docs"]],
+];
+
 let state = { config: null, timetable: [], validation: null, metrics: null, benchmark: null };
 // Per-view UI selections that should survive re-renders but not reloads.
 const ui = { tabs: {}, viewer: { section: "", faculty: "", room: "", mode: "grid" }, editFac: "", editFacDay: "", editSub: "", editRoom: "" };

@@ -6,27 +6,70 @@
   <title>SmartSlot AI | Academic Timetable Generator</title>
   <meta name="description" content="Intelligent CSP timetable generator using Backtracking Search with MRV, LCV and Forward Checking.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+
   <aside id="sidebar" class="sidebar">
     <div class="brand">
       <span class="brand-icon">📅</span>
       <div>
         <div class="brand-title">SmartSlot AI</div>
-        <div class="brand-caption">Intelligent CSP Timetable Generator</div>
+        <div class="brand-caption">intelligent csp timetable planner</div>
       </div>
     </div>
+    <div class="sidebar-label">navigations</div>
     <nav id="nav" class="nav"></nav>
-    <div class="sidebar-footer">
-      <div><strong>Institution:</strong><br><em id="sb-inst"></em></div>
-      <div><strong>Term:</strong> <em id="sb-term"></em></div>
-    </div>
+    <details class="nav-group sidebar-footer" open>
+      <summary>institution info</summary>
+      <div class="info-line"><span>institution:</span><em id="sb-inst"></em></div>
+      <div class="info-line"><span>term:</span><em id="sb-term"></em></div>
+    </details>
+    <div class="sidebar-cloud" aria-hidden="true"></div>
   </aside>
-  <main id="view" class="main"></main>
+
+  <main class="main">
+    <div id="view"></div>
+    <footer class="archive" aria-hidden="true">
+      <div class="archive-title">archives</div>
+      <div class="gallery">
+        <div class="watercolor wc-1"></div>
+        <div class="watercolor wc-2"></div>
+        <div class="watercolor wc-3"></div>
+      </div>
+    </footer>
+  </main>
+
+  <aside class="rail" aria-label="Widgets">
+    <div class="clock" aria-label="Current time">
+      <span id="clock-h" class="clock-tile">00</span>
+      <span id="clock-m" class="clock-tile">00</span>
+    </div>
+    <div class="rail-label">a reminder</div>
+    <div class="note">
+      <p>you don't have to be great now —</p>
+      <p>you just need the motivation and determination to get there!</p>
+    </div>
+    <div class="quote quote-sign"><span>if you need a sign,<br>this is your sign.</span><small>stop procrastinating, start some good habits.</small></div>
+    <div class="quote quote-caps">if you get tired, learn to rest, not to quit.</div>
+    <div class="quote quote-serif">everything happens for a reason</div>
+    <div class="quote quote-mixed">You are <em>stronger</em> than you think</div>
+  </aside>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="busy" class="busy" hidden><div class="spinner"></div><div id="busy-text"></div></div>
   <script src="/app.js"></script>
+  <script>
+    (function tick() {
+      const now = new Date();
+      document.getElementById("clock-h").textContent = String(now.getHours()).padStart(2, "0");
+      document.getElementById("clock-m").textContent = String(now.getMinutes()).padStart(2, "0");
+      setTimeout(tick, (60 - now.getSeconds()) * 1000);
+    })();
+  </script>
 </body>
 </html>
