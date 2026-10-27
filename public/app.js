@@ -228,6 +228,19 @@ views.dashboard = () => {
       </div>
       <div><h2>Scheduling Health</h2>${table(health)}</div>
     </div>
+    <h2>Assignments</h2>
+    <div class="todo">
+      <div class="todo-sticker" aria-hidden="true">To do list</div>
+      <div class="todo-list">
+        <div class="todo-title">today's task</div>
+        ${[
+          ["Review academic configuration", cfg.subjects.length > 0],
+          ["Generate the weekly timetable", scheduled > 0],
+          ["Pass independent validation", !!(val && val.is_valid)],
+          ["Run the algorithm benchmark", !!state.benchmark],
+        ].map(([t, done]) => `<label class="todo-item ${done ? "done" : ""}"><input type="checkbox" disabled ${done ? "checked" : ""}> ${t}</label>`).join("")}
+      </div>
+    </div>
     <hr>
     <h2>Constraint Satisfaction Problem (CSP) Overview</h2>
     <p>Academic timetabling is an <strong>NP-complete</strong> combinatorial optimization problem modeled formally as a Constraint Satisfaction Problem <strong>𝒫 = ⟨X, D, C⟩</strong>:</p>
@@ -784,7 +797,10 @@ function currentView() {
 
 function render() {
   const v = currentView();
-  $("#nav").innerHTML = VIEWS.map(([id, label]) => `<a href="#${id}" class="${id === v ? "active" : ""}">${label}</a>`).join("");
+  const labels = Object.fromEntries(VIEWS);
+  $("#nav").innerHTML = NAV_GROUPS.map(([group, ids]) => `<details class="nav-group" open><summary>${group}</summary>${
+    ids.map((id) => `<a href="#${id}" class="${id === v ? "active" : ""}">${labels[id]}</a>`).join("")
+  }</details>`).join("");
   $("#sb-inst").textContent = state.config.institution_name || "Northstar Institute";
   $("#sb-term").textContent = state.config.academic_term || "Fall 2026";
   $("#view").innerHTML = views[v]();
