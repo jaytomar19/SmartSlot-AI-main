@@ -11,17 +11,17 @@ const ALL_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satur
 const ROOM_TYPES = ["Classroom", "Laboratory", "Seminar Hall"];
 
 const VIEWS = [
-  ["dashboard", "📊 Dashboard"],
-  ["config", "⚙️ Academic Configuration"],
-  ["faculty", "👨‍🏫 Faculty Management"],
-  ["subjects", "📚 Subject & Course Management"],
-  ["classrooms", "🏫 Classroom Management"],
-  ["generator", "🤖 AI Timetable Generator"],
-  ["conflicts", "🔍 Conflict Detection & Explanation"],
-  ["viewer", "📅 Timetable Viewer"],
-  ["benchmark", "📈 Performance & Algorithm Analysis"],
-  ["export", "💾 Export & Reset"],
-  ["docs", "📖 Academic Viva & Algorithm Docs"],
+  ["dashboard", "Dashboard"],
+  ["config", "Academic Configuration"],
+  ["faculty", "Faculty Management"],
+  ["subjects", "Subject & Course Management"],
+  ["classrooms", "Classroom Management"],
+  ["generator", "AI Timetable Generator"],
+  ["conflicts", "Conflict Detection & Explanation"],
+  ["viewer", "Timetable Viewer"],
+  ["benchmark", "Performance & Algorithm Analysis"],
+  ["export", "Export & Reset"],
+  ["docs", "Academic Viva & Algorithm Docs"],
 ];
 
 // Sidebar toggle groups (presentation only).
@@ -62,7 +62,8 @@ function clearResults() {
 let toastTimer;
 function toast(msg, ok = true) {
   const el = $("#toast");
-  el.textContent = (ok ? "✅ " : "❌ ") + msg;
+  el.textContent = msg;
+  el.classList.toggle("toast-error", !ok);
   el.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove("show"), 3500);
@@ -166,7 +167,7 @@ function conflictCard(c) {
   return `<div class="conflict ${isErr ? "" : "warn"}">
     <span class="badge ${isErr ? "badge-danger" : "badge-warning"}">[${esc(c.severity)}] ${esc(c.conflict_type)}</span>
     <p>${esc(c.description)}</p>
-    <p class="fix">💡 <strong>Recommended Fix:</strong> ${esc(c.suggestion)}</p>
+    <p class="fix"><strong>Recommended Fix:</strong> ${esc(c.suggestion)}</p>
   </div>`;
 }
 
@@ -201,9 +202,9 @@ views.dashboard = () => {
   const val = state.validation;
 
   let status;
-  if (scheduled === 0) status = alertBox("info", "ℹ️ <strong>Status: Pending Generation.</strong> No timetable has been generated for the active academic term.");
-  else if (val && val.is_valid) status = alertBox("success", `✅ <strong>Status: Valid &amp; Conflict-Free.</strong> Successfully scheduled ${scheduled} / ${totalReq} periods across ${cfg.working_days.length} working days with 0 hard constraint violations.`);
-  else status = alertBox("error", `⚠️ <strong>Status: Conflicts Detected.</strong> Schedule contains ${val ? val.conflicts.length : 0} issues or unscheduled sessions requiring administrator resolution.`);
+  if (scheduled === 0) status = alertBox("info", "<strong>Status: Pending Generation.</strong> No timetable has been generated for the active academic term.");
+  else if (val && val.is_valid) status = alertBox("success", `<strong>Status: Valid &amp; Conflict-Free.</strong> Successfully scheduled ${scheduled} / ${totalReq} periods across ${cfg.working_days.length} working days with 0 hard constraint violations.`);
+  else status = alertBox("error", `<strong>Status: Conflicts Detected.</strong> Schedule contains ${val ? val.conflicts.length : 0} issues or unscheduled sessions requiring administrator resolution.`);
 
   const health = [
     { Metric: "Scheduled Periods", Value: `${scheduled} / ${totalReq}` },
@@ -222,8 +223,8 @@ views.dashboard = () => {
         <h2>Timetable Generation Status</h2>
         ${status}
         <div class="btn-row">
-          <button class="btn btn-primary" data-action="solve-default">🚀 Generate Conflict-Free Timetable (AI CSP)</button>
-          <button class="btn" data-nav="conflicts">🔍 View Conflict Report</button>
+          <button class="btn btn-primary" data-action="solve-default">Generate Conflict-Free Timetable (AI CSP)</button>
+          <button class="btn" data-nav="conflicts">View Conflict Report</button>
         </div>
       </div>
       <div><h2>Scheduling Health</h2>${table(health)}</div>
@@ -255,7 +256,7 @@ views.dashboard = () => {
 views.config = () => {
   const cfg = state.config;
   return `${header("Academic Configuration", "Configure institutional working days, daily period slots, and break periods")}
-    <h2>🏛️ Institution &amp; Term Details</h2>
+    <h2>Institution &amp; Term Details</h2>
     <form data-form="institution">
       <div class="row cols-2">
         <div>${text("institution_name", "Institution Name", cfg.institution_name)}${text("department", "Department", cfg.department)}</div>
@@ -331,7 +332,7 @@ views.faculty = () => {
 
   return `${header("Faculty Management", "Manage teaching faculty, workloads, and day/slot availability restrictions")}
     ${table(rows)}
-    ${tabs("faculty", [["➕ Add New Faculty", addTab], ["✏️ Edit Faculty", editTab], ["🗑️ Delete Faculty", delTab]])}`;
+    ${tabs("faculty", [["Add New Faculty", addTab], ["Edit Faculty", editTab], ["Delete Faculty", delTab]])}`;
 };
 
 function subjectFields(cfg, s, isEdit) {
@@ -382,7 +383,7 @@ views.subjects = () => {
 
   return `${header("Subject & Course Management", "Manage course curricula, assigned faculty, room type requirements, and multi-period sessions")}
     ${table(rows)}
-    ${tabs("subjects", [["➕ Add New Subject", addTab], ["✏️ Edit Subject", editTab], ["🗑️ Delete Subject", delTab]])}`;
+    ${tabs("subjects", [["Add New Subject", addTab], ["Edit Subject", editTab], ["Delete Subject", delTab]])}`;
 };
 
 views.classrooms = () => {
@@ -414,7 +415,7 @@ views.classrooms = () => {
 
   return `${header("Classroom & Laboratory Management", "Manage lecture halls, laboratory spaces, seating capacities, and operational availability")}
     ${table(rooms)}
-    ${tabs("classrooms", [["➕ Add Classroom", addTab], ["✏️ Edit / Toggle Room", editTab], ["🗑️ Delete Classroom", delTab]])}`;
+    ${tabs("classrooms", [["Add Classroom", addTab], ["Edit / Toggle Room", editTab], ["Delete Classroom", delTab]])}`;
 };
 
 views.generator = () => {
@@ -425,8 +426,8 @@ views.generator = () => {
     let stamp = "";
     if (val) {
       stamp = val.is_valid
-        ? alertBox("success", "🛡️ <strong>Independent Timetable Validation Pass:</strong> PASSED with 0 hard constraint violations! Every assignment strictly adheres to faculty availability, room capacity, section independence, and break periods.")
-        : alertBox("warning", `⚠️ <strong>Independent Timetable Validation Pass:</strong> Found ${val.summary_stats.error_count ?? 0} errors and ${val.summary_stats.warning_count ?? 0} warnings.`);
+        ? alertBox("success", "<strong>Independent Timetable Validation Pass:</strong> PASSED with 0 hard constraint violations! Every assignment strictly adheres to faculty availability, room capacity, section independence, and break periods.")
+        : alertBox("warning", `<strong>Independent Timetable Validation Pass:</strong> Found ${val.summary_stats.error_count ?? 0} errors and ${val.summary_stats.warning_count ?? 0} warnings.`);
     }
     const trace = (m.trace_events || []).map((t) => ({
       Type: t.type, Variable: t.variable ?? "", Subject: t.subject ?? "", Day: t.day ?? "",
@@ -461,7 +462,7 @@ views.generator = () => {
         <div>
           <h2 style="margin-top:0">Run Generator</h2>
           <p>Click below to trigger the CSP Backtracking engine:</p>
-          <button class="btn btn-primary btn-block" type="submit">🚀 Execute CSP Timetable Solver</button>
+          <button class="btn btn-primary btn-block" type="submit">Execute CSP Timetable Solver</button>
         </div>
       </div>
     </form>
@@ -480,7 +481,7 @@ views.conflicts = () => {
         ${metric("Critical Errors", val.summary_stats.error_count ?? 0)}${metric("Warnings", val.summary_stats.warning_count ?? 0)}
       </div>
       ${val.is_valid
-        ? alertBox("success", "🎉 <strong>All 10 Hard Constraints Satisfied!</strong> Independent validation verified zero faculty clashes, zero classroom double-bookings, zero student section conflicts, valid room types, sufficient capacities, and zero break period overlaps.")
+        ? alertBox("success", "<strong>All 10 Hard Constraints Satisfied!</strong> Independent validation verified zero faculty clashes, zero classroom double-bookings, zero student section conflicts, valid room types, sufficient capacities, and zero break period overlaps.")
         : `<h3>Detected Conflicts &amp; Resolution Advice</h3>${val.conflicts.map(conflictCard).join("")}`}`;
   }
   return `${header("Conflict Detection & Diagnostic Engine", "Independent constraint verification pass with root-cause explanations and actionable suggestions")}
@@ -495,8 +496,8 @@ async function loadConfigConflicts() {
     const { conflicts } = await api("/api/config/validate", { config: state.config });
     if (!box.isConnected) return;
     box.innerHTML = conflicts.length
-      ? alertBox("error", `⚠️ Found ${conflicts.length} Pre-Scheduling Configuration Issue(s) in Academic Setup:`) + conflicts.map(conflictCard).join("")
-      : alertBox("success", "✅ Academic configuration passed all pre-scheduling checks.");
+      ? alertBox("error", `Found ${conflicts.length} Pre-Scheduling Configuration Issue(s) in Academic Setup:`) + conflicts.map(conflictCard).join("")
+      : alertBox("success", "Academic configuration passed all pre-scheduling checks.");
   } catch (e) {
     if (box.isConnected) box.innerHTML = alertBox("error", esc(e.message));
   }
@@ -530,7 +531,7 @@ views.viewer = () => {
   for (const slot of cfg.time_slots) {
     cells += `<div class="tt-slot">${esc(slot.name)}<small>${esc(slot.start_time)} - ${esc(slot.end_time)}</small></div>`;
     for (const day of days) {
-      if (slot.is_break) { cells += `<div class="timetable-break">☕ ${esc(slot.name)}</div>`; continue; }
+      if (slot.is_break) { cells += `<div class="timetable-break">${esc(slot.name)}</div>`; continue; }
       const items = lookup[`${day}|${slot.slot_id}`] || [];
       if (!items.length) { cells += `<div class="timetable-empty">Vacant Slot</div>`; continue; }
       cells += `<div>${items.map((it) => {
@@ -538,8 +539,8 @@ views.viewer = () => {
         return `<div class="timetable-cell">
             <div class="top"><strong>${esc(it.subject_id)}</strong><span class="badge ${it.room_type === "Laboratory" ? "badge-lab" : "badge-theory"}">${esc(it.room_type)}</span></div>
             <div class="name">${esc(it.subject_name)}${esc(part)}</div>
-            <div class="fac">👨‍🏫 ${esc(it.faculty_name)}</div>
-            <div class="room">🏫 ${esc(it.room_name)} | 👥 ${esc(it.section_id)}</div>
+            <div class="fac">${esc(it.faculty_name)}</div>
+            <div class="room">${esc(it.room_name)} | ${esc(it.section_id)}</div>
           </div>`;
       }).join("")}</div>`;
     }
@@ -556,7 +557,7 @@ views.benchmark = () => {
     const summary = [["Basic Backtracking", b.basic], ["Backtracking + Forward Checking", b.forward_checking], ["Full AI (MRV + LCV + Forward Checking)", b.full_ai]].map(([name, m]) => ({
       "Algorithm Configuration": name, "Candidates Explored": m.candidate_assignments_explored, "Constraint Checks": m.constraint_checks,
       Backtracks: m.backtrack_count, "Rejected Choices": m.rejected_assignments, "Execution Time (s)": m.execution_time_seconds,
-      "Solved?": m.solution_found ? "✅ Yes" : "❌ No",
+      "Solved?": m.solution_found ? "Yes" : "No",
     }));
     body = `<div class="row cols-3">
         <div><h3>1. Basic Backtracking</h3><p>Depth-first search with static variable order and no forward pruning.</p>${kv(b.basic)}</div>
@@ -573,28 +574,28 @@ views.benchmark = () => {
       <li><strong>Backtracking + Forward Checking (FC):</strong> Prunes conflicting future domain values after each assignment; detects domain wipeouts early.</li>
       <li><strong>Full AI Solver (MRV + LCV + FC):</strong> Minimum Remaining Values for fail-first variable selection, Least Constraining Value for value ordering, and Forward Checking.</li>
     </ol>
-    <button class="btn btn-primary" data-action="benchmark">🚀 Run Comparative Benchmark on Current Dataset</button>
+    <button class="btn btn-primary" data-action="benchmark">Run Comparative Benchmark on Current Dataset</button>
     ${body}`;
 };
 
 views.export = () => `${header("Export & Configuration Reset", "Export generated timetable to CSV, generate validation audit logs, or restore demonstration datasets")}
     <div class="row cols-2">
       <div class="panel">
-        <h2 style="margin-top:0">📥 Export Timetable &amp; Audit Report</h2>
+        <h2 style="margin-top:0">Export Timetable &amp; Audit Report</h2>
         ${state.timetable.length
-          ? `<button class="btn btn-block" data-action="export-csv">📄 Download Timetable as CSV</button>`
+          ? `<button class="btn btn-block" data-action="export-csv">Download Timetable as CSV</button>`
           : alertBox("warning", "No active timetable available for export. Generate one first.")}
         <div style="height:.6rem"></div>
-        <button class="btn btn-block" data-action="export-report">📑 Download Full Audit &amp; Validation Report (.md)</button>
+        <button class="btn btn-block" data-action="export-report">Download Full Audit &amp; Validation Report (.md)</button>
         <div style="height:.6rem"></div>
-        <button class="btn btn-block" data-action="export-config">⚙️ Download Academic Configuration (.json)</button>
+        <button class="btn btn-block" data-action="export-config">Download Academic Configuration (.json)</button>
       </div>
       <div class="panel">
-        <h2 style="margin-top:0">🔄 Reset &amp; Demonstration Datasets</h2>
+        <h2 style="margin-top:0">Reset &amp; Demonstration Datasets</h2>
         <p>Quickly reload baseline data or demonstrate failure handling:</p>
         <button class="btn btn-block" data-action="reset-default">Restore Default Northstar Institute Dataset</button>
         <div style="height:.6rem"></div>
-        <button class="btn btn-block" data-action="reset-infeasible">⚠️ Load Infeasible Test Case (Demonstrate Failure Handling)</button>
+        <button class="btn btn-block" data-action="reset-infeasible">Load Infeasible Test Case (Demonstrate Failure Handling)</button>
         <div style="height:.6rem"></div>
         <label>Import Academic Configuration (.json)<input type="file" accept="application/json,.json" data-action="import-config"></label>
       </div>
@@ -692,7 +693,7 @@ def BACKTRACK(assignment, csp):
 +-------------------------------+</pre>`;
 
   return `${header("Academic Deliverable & Viva Preparation Guide", "Theoretical foundation, CSP mathematical model, pseudocode, and viva examination questions")}
-    ${tabs("docs", [["📐 CSP Formulation & Pseudocode", formulation], ["❓ Top 10 Viva Questions & Answers", qaHtml], ["🏗️ System Architecture", arch]])}`;
+    ${tabs("docs", [["CSP Formulation & Pseudocode", formulation], ["Top 10 Viva Questions & Answers", qaHtml], ["System Architecture", arch]])}`;
 };
 
 // ==============================================================================

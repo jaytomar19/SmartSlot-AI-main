@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SmartSlot AI | Academic Timetable Generator</title>
   <meta name="description" content="Intelligent CSP timetable generator using Backtracking Search with MRV, LCV and Forward Checking.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='2' y='4' width='20' height='18' rx='3' fill='%235C8FD1'/><rect x='2' y='4' width='20' height='6' rx='3' fill='%232B3A57'/><rect x='5' y='13' width='4' height='3' fill='white'/><rect x='10' y='13' width='4' height='3' fill='white'/><rect x='15' y='13' width='4' height='3' fill='white'/><rect x='5' y='17' width='4' height='3' fill='white'/><rect x='10' y='17' width='4' height='3' fill='white'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap">
@@ -16,7 +16,12 @@
 
   <aside id="sidebar" class="sidebar">
     <div class="brand">
-      <span class="brand-icon">📅</span>
+      <svg class="brand-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="18" rx="3" fill="#5C8FD1"/>
+        <rect x="2" y="4" width="20" height="6" rx="3" fill="#2B3A57"/>
+        <rect x="5" y="13" width="4" height="3" fill="#fff"/><rect x="10" y="13" width="4" height="3" fill="#fff"/><rect x="15" y="13" width="4" height="3" fill="#fff"/>
+        <rect x="5" y="17" width="4" height="3" fill="#fff"/><rect x="10" y="17" width="4" height="3" fill="#fff"/>
+      </svg>
       <div>
         <div class="brand-title">SmartSlot AI</div>
         <div class="brand-caption">intelligent csp timetable planner</div>
@@ -35,14 +40,6 @@
 
   <main class="main">
     <div id="view"></div>
-    <footer class="archive" aria-hidden="true">
-      <div class="archive-title">archives</div>
-      <div class="gallery">
-        <div class="watercolor wc-1"></div>
-        <div class="watercolor wc-2"></div>
-        <div class="watercolor wc-3"></div>
-      </div>
-    </footer>
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
