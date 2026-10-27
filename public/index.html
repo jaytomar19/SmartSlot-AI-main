@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmartSlot AI | Academic Timetable Generator</title>
+  <meta name="description" content="Intelligent CSP timetable generator using Backtracking Search with MRV, LCV and Forward Checking.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+  <aside id="sidebar" class="sidebar">
+    <div class="brand">
+      <span class="brand-icon">📅</span>
+      <div>
+        <div class="brand-title">SmartSlot AI</div>
+        <div class="brand-caption">Intelligent CSP Timetable Generator</div>
+      </div>
+    </div>
+    <nav id="nav" class="nav"></nav>
+    <div class="sidebar-footer">
+      <div><strong>Institution:</strong><br><em id="sb-inst"></em></div>
+      <div><strong>Term:</strong> <em id="sb-term"></em></div>
+    </div>
+  </aside>
+  <main id="view" class="main"></main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="busy" class="busy" hidden><div class="spinner"></div><div id="busy-text"></div></div>
+  <script src="/app.js"></script>
+</body>
+</html>

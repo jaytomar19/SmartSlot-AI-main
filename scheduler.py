@@ -561,7 +561,7 @@ class TimetableCSP:
         return results
 
 
-def run_benchmark_comparison(config: Dict[str, Any]) -> Dict[str, Any]:
+def run_benchmark_comparison(config: Dict[str, Any], timeout_seconds: float = 20.0) -> Dict[str, Any]:
     """
     Executes a side-by-side empirical benchmark of:
     1. Basic Backtracking (no MRV, no LCV, no Forward Checking)
@@ -578,7 +578,7 @@ def run_benchmark_comparison(config: Dict[str, Any]) -> Dict[str, Any]:
         use_lcv=False,
         use_forward_checking=False,
         max_backtracks=20000,
-        timeout_seconds=20.0
+        timeout_seconds=timeout_seconds
     )
 
     # 2. Backtracking + Forward Checking
@@ -587,7 +587,7 @@ def run_benchmark_comparison(config: Dict[str, Any]) -> Dict[str, Any]:
         use_lcv=False,
         use_forward_checking=True,
         max_backtracks=20000,
-        timeout_seconds=20.0
+        timeout_seconds=timeout_seconds
     )
 
     # 3. Full Optimization (MRV + LCV + FC)
@@ -596,7 +596,7 @@ def run_benchmark_comparison(config: Dict[str, Any]) -> Dict[str, Any]:
         use_lcv=True,
         use_forward_checking=True,
         max_backtracks=20000,
-        timeout_seconds=20.0
+        timeout_seconds=timeout_seconds
     )
 
     return {

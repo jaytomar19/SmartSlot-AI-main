@@ -21,16 +21,17 @@ DEFAULT_DATA_FILE = "academic_config.json"
 class DataManager:
     """Manages local state, persistence, validation, and export of timetable data."""
 
-    def __init__(self, filepath: str = DEFAULT_DATA_FILE):
+    def __init__(self, filepath: Optional[str] = DEFAULT_DATA_FILE, config: Optional[Dict[str, Any]] = None):
+        # filepath=None disables disk persistence (stateless serverless deployments).
         self.filepath = filepath
-        self.config: Dict[str, Any] = self.load_config()
+        self.config: Dict[str, Any] = config if config is not None else self.load_config()
         self.current_timetable: List[Dict[str, Any]] = []
         self.last_validation: Optional[ValidationReport] = None
         self.last_solver_metrics: Optional[Dict[str, Any]] = None
 
     def load_config(self) -> Dict[str, Any]:
         """Loads configuration from JSON file or initializes with default Northstar dataset."""
-        if os.path.exists(self.filepath):
+        if self.filepath and os.path.exists(self.filepath):
             try:
                 with open(self.filepath, "r", encoding="utf-8") as f:
                     return json.load(f)
@@ -40,6 +41,8 @@ class DataManager:
 
     def save_config(self) -> bool:
         """Persists the current configuration to local JSON."""
+        if not self.filepath:
+            return True
         try:
             with open(self.filepath, "w", encoding="utf-8") as f:
                 json.dump(self.config, f, indent=2)
@@ -62,6 +65,37 @@ class DataManager:
         self.last_validation = None
         self.last_solver_metrics = None
         self.save_config()
+
+    # --- Academic Configuration ---
+    def update_institution(self, institution_name: str, department: str, academic_term: str) -> Tuple[bool, str]:
+        self.config["institution_name"] = institution_name.strip()
+        self.config["department"] = department.strip()
+        self.config["academic_term"] = academic_term.strip()
+        self.save_config()
+        return True, "Institution details updated."
+
+    def set_working_days(self, working_days: List[str]) -> Tuple[bool, str]:
+        if not working_days:
+            return False, "At least one working day must be active."
+        self.config["working_days"] = working_days
+        self.save_config()
+        return True, f"Working days set to: {', '.join(working_days)}"
+
+    def add_time_slot(self, slot_id: str, name: str, start_time: str, end_time: str, is_break: bool = False) -> Tuple[bool, str]:
+        slot_id = slot_id.strip()
+        if not slot_id:
+            return False, "Slot ID cannot be empty."
+        if any(s["slot_id"] == slot_id for s in self.config["time_slots"]):
+            return False, f"Slot ID '{slot_id}' already exists."
+        self.config["time_slots"].append({
+            "slot_id": slot_id,
+            "name": name.strip() or slot_id,
+            "start_time": start_time.strip(),
+            "end_time": end_time.strip(),
+            "is_break": is_break
+        })
+        self.save_config()
+        return True, f"Slot '{slot_id}' added."
 
     # --- Classroom Management ---
     def add_classroom(self, room_id: str, name: str, capacity: int, room_type: str, available: bool = True) -> Tuple[bool, str]:
