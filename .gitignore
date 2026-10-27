@@ -1,0 +1,28 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Environment Variables
+.env
+.env.*
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Pytest & Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS Specific
+.DS_Store
+Thumbs.db
+
+# Streamlit Local Config & Secrets
+.streamlit/secrets.toml
+.streamlit/credentials.toml
