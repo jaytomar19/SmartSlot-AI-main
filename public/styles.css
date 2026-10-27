@@ -536,24 +536,38 @@ input[type=file] { margin-top: .4rem; font-size: .8rem; }
   margin-bottom: .8rem;
 }
 .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
-.watercolor { height: 120px; border-radius: 3px; filter: saturate(.85); }
+.watercolor { position: relative; overflow: hidden; height: 120px; border-radius: 3px; filter: saturate(.85); }
+/* Scattered flower specks, only across the meadow */
+.watercolor::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 42%;
+  opacity: .55;
+  background:
+    radial-gradient(circle, var(--speck) 0 1.5px, transparent 2px) 0 0 / 13px 9px,
+    radial-gradient(circle, var(--speck) 0 1px, transparent 1.5px) 6px 5px / 17px 11px;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 60%);
+  mask-image: linear-gradient(180deg, transparent, #000 60%);
+}
 .wc-1 {
+  --speck: #B49BD6;
   background:
     radial-gradient(ellipse 45% 25% at 30% 22%, rgba(255,255,255,.9), transparent 70%),
-    radial-gradient(circle at 15% 78%, #B9A3D8 0 3px, transparent 4px) 0 0 / 22px 14px,
-    linear-gradient(180deg, #A9C7E8 0%, #CFE0F1 42%, #9FC1A0 58%, #7FA68A 78%, #C6B7DE 100%);
+    radial-gradient(ellipse 30% 18% at 75% 30%, rgba(255,255,255,.7), transparent 70%),
+    linear-gradient(180deg, #A9C7E8 0%, #CFE0F1 45%, #A9C7A5 60%, #86AC8C 80%, #A99BCB 100%);
 }
 .wc-2 {
+  --speck: #F3E3A0;
   background:
     radial-gradient(ellipse 55% 30% at 65% 25%, rgba(255,255,255,.85), transparent 70%),
-    radial-gradient(circle at 50% 50%, #F1E29A 0 2px, transparent 3px) 0 0 / 18px 12px,
-    linear-gradient(180deg, #B7D0EC 0%, #DCE8F4 40%, #B9D0A4 55%, #8DB38A 75%, #A9C896 100%);
+    linear-gradient(180deg, #B7D0EC 0%, #DCE8F4 42%, #C0D4A8 57%, #93B78E 78%, #A8C795 100%);
 }
 .wc-3 {
+  --speck: #C4A6D8;
   background:
     radial-gradient(ellipse 50% 28% at 40% 30%, rgba(255,255,255,.9), transparent 70%),
-    radial-gradient(circle at 50% 50%, #C9A9D9 0 2px, transparent 3px) 0 0 / 16px 11px,
-    linear-gradient(180deg, #9EBEE3 0%, #D2E2F3 45%, #A7C49C 60%, #7EA382 82%, #B8C8E6 100%);
+    linear-gradient(180deg, #9EBEE3 0%, #D2E2F3 47%, #AFC9A2 62%, #84A887 84%, #A9B9DE 100%);
 }
 
 /* ============================================================
