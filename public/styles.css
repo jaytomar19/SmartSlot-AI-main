@@ -58,7 +58,7 @@ body {
    Left sidebar — Notion-style toggles
    ============================================================ */
 .sidebar {
-  width: 250px;
+  width: var(--sidebar-w, 250px);
   flex-shrink: 0;
   height: 100vh;
   position: sticky;
@@ -132,6 +132,24 @@ body {
     linear-gradient(180deg, #B4CDEA 0%, #C9DBF0 55%, #DCE7F4 100%);
 }
 .menu-toggle { display: none; }
+
+/* Drag handle on the sidebar's right edge */
+.sidebar-resizer {
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
+  width: 7px;
+  height: 100vh;
+  margin-left: -4px;
+  z-index: 5;
+  cursor: col-resize;
+  background: transparent;
+  transition: background .15s;
+}
+.sidebar-resizer:hover,
+.sidebar-resizer:focus-visible,
+body.resizing .sidebar-resizer { background: var(--sky-300); outline: none; }
+body.resizing { cursor: col-resize; user-select: none; }
 
 /* ============================================================
    Main column
@@ -630,6 +648,7 @@ input[type=file] { margin-top: .4rem; font-size: .8rem; }
     padding: .15rem .55rem;
     box-shadow: var(--shadow-card);
   }
+  .sidebar-resizer { display: none; }
   .sidebar { position: fixed; left: 0; top: 0; z-index: 25; transform: translateX(-100%); transition: transform .2s; box-shadow: 4px 0 20px rgba(0,0,0,.1); }
   .sidebar.open { transform: none; }
   .main { padding: 3.4rem 16px 2rem; }

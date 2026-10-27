@@ -847,8 +847,53 @@ function bindEvents() {
   });
 }
 
+// Drag the sidebar's right edge to resize it; the width is remembered per browser.
+const SIDEBAR_WIDTH_KEY = "smartslot_sidebar_width";
+const SIDEBAR_MIN = 200;
+const SIDEBAR_DEFAULT = 250;
+const sidebarMax = () => Math.min(600, Math.floor(window.innerWidth * 0.5));
+
+function setSidebarWidth(px, persist = true) {
+  const w = Math.round(Math.max(SIDEBAR_MIN, Math.min(sidebarMax(), px)));
+  document.documentElement.style.setProperty("--sidebar-w", `${w}px`);
+  if (persist) {
+    try { localStorage.setItem(SIDEBAR_WIDTH_KEY, String(w)); } catch (_) { /* storage unavailable */ }
+  }
+}
+
+function initSidebarResize() {
+  const handle = $("#sidebar-resizer");
+  try {
+    const saved = parseInt(localStorage.getItem(SIDEBAR_WIDTH_KEY), 10);
+    if (saved) setSidebarWidth(saved, false);
+  } catch (_) { /* storage unavailable */ }
+
+  handle.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    handle.setPointerCapture(e.pointerId);
+    document.body.classList.add("resizing");
+    const onMove = (ev) => setSidebarWidth(ev.clientX, false);
+    const onUp = (ev) => {
+      handle.removeEventListener("pointermove", onMove);
+      handle.removeEventListener("pointerup", onUp);
+      document.body.classList.remove("resizing");
+      setSidebarWidth(ev.clientX);
+    };
+    handle.addEventListener("pointermove", onMove);
+    handle.addEventListener("pointerup", onUp);
+  });
+  handle.addEventListener("dblclick", () => setSidebarWidth(SIDEBAR_DEFAULT));
+  handle.addEventListener("keydown", (e) => {
+    const step = e.shiftKey ? 50 : 10;
+    const current = $("#sidebar").getBoundingClientRect().width;
+    if (e.key === "ArrowLeft") setSidebarWidth(current - step);
+    else if (e.key === "ArrowRight") setSidebarWidth(current + step);
+  });
+}
+
 async function init() {
   bindEvents();
+  initSidebarResize();
   const saved = loadState();
   if (saved && saved.config) {
     state = { ...state, ...saved };
