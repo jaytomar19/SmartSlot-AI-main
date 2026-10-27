@@ -21,40 +21,54 @@ The application is pre-configured with a complete demonstration dataset for the 
 
 ---
 
-## ⚡ Quickstart Guide
+## 🚀 Deploying to Vercel
+
+The production app is a static single-page UI (`public/`) backed by a stateless FastAPI serverless function (`api/index.py`) that wraps the CSP engine.
+
+1. Push this repository to GitHub.
+2. In Vercel, click **Add New → Project**, import the repo, and keep the defaults (Framework Preset: **Other**). `vercel.json` already configures everything.
+3. Click **Deploy**.
+
+Or deploy from the CLI:
+```bash
+npm i -g vercel
+vercel          # preview deployment
+vercel --prod   # production deployment
+```
+
+**How state works on Vercel:** serverless functions have no persistent disk, so the browser stores the academic configuration, timetable, and reports in `localStorage` and sends the config with each API request. Use **Export & Reset → Download Academic Configuration** to back up or move a configuration between browsers.
+
+API docs are served at `/api/docs` on any deployment.
+
+---
+
+## ⚡ Local Development
 
 ### 1. Prerequisites
-- Python 3.10, 3.11, or 3.12 installed.
+- Python 3.10 – 3.12 (Vercel runs Python 3.12).
 
 ### 2. Setup Virtual Environment & Install Dependencies
 ```bash
-# Navigate to project directory
-cd "slot ai"
-
-# Create a virtual environment
 python3 -m venv .venv
 
-# Activate virtual environment
 # On macOS / Linux:
 source .venv/bin/activate
 # On Windows:
 # .venv\Scripts\activate
 
-# Install required dependencies
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
 
 ### 3. Run Automated Tests
-Execute the comprehensive test suite verifying solver correctness, constraint checks, and failure handling:
 ```bash
 pytest -v tests/
 ```
 
 ### 4. Launch the Web Application
 ```bash
-streamlit run app.py
+python dev_server.py
 ```
-Open your web browser at `http://localhost:8501`.
+Open `http://localhost:8000`. This serves the same UI and API as the Vercel deployment. (`vercel dev` also works.)
 
 ---
 
@@ -88,18 +102,31 @@ $$\mathcal{P} = \langle X, D, C \rangle$$
 ## 📁 Project Architecture
 
 ```
-slot ai/
-├── app.py                      # Main Streamlit web application & UI views
-├── scheduler.py                # CSP formulation, Backtracking, MRV, LCV, FC engine
-├── constraints.py              # 10 Hard constraints audit & conflict diagnostics
-├── data_manager.py             # Configuration CRUD, JSON persistence, CSV exports
-├── sample_data.py              # Northstar Institute of Technology dataset + infeasible test case
-├── requirements.txt            # Project dependencies (streamlit, pandas, pytest)
-├── pytest.ini                  # Pytest configuration
-├── ACADEMIC_REPORT.md          # Comprehensive AI viva documentation & report
+SmartSlot-AI/
+├── api/
+│   └── index.py                # Vercel serverless FastAPI app (stateless JSON API)
+├── public/
+│   ├── index.html              # Single-page web UI (served by Vercel CDN)
+│   ├── app.js                  # UI views, localStorage state, API client
+│   └── styles.css              # UI styling
+├── smartslot/                  # Core AI engine (Python package)
+│   ├── scheduler.py            # CSP formulation, Backtracking, MRV, LCV, FC engine
+│   ├── constraints.py          # 10 Hard constraints audit & conflict diagnostics
+│   ├── data_manager.py         # Configuration CRUD, optional JSON persistence, CSV exports
+│   └── sample_data.py          # Northstar Institute of Technology dataset + infeasible test case
+├── docs/
+│   └── ACADEMIC_REPORT.md      # Comprehensive AI viva documentation & report
 ├── tests/
+│   ├── test_api.py            # Tests for the serverless API
 │   ├── test_constraints.py    # Unit tests for conflict detection and validation
 │   └── test_scheduler.py      # Unit tests for CSP solver and timetable generation
+├── dev_server.py               # Local server mirroring the Vercel deployment
+├── vercel.json                 # Vercel routing & function configuration
+├── .vercelignore               # Files excluded from the Vercel upload
+├── .python-version             # Python version for Vercel (3.12)
+├── requirements.txt            # Production dependencies (fastapi, pandas)
+├── requirements-dev.txt        # Dev dependencies (pytest, uvicorn, httpx)
+├── pytest.ini                  # Pytest configuration
 └── README.md                   # Project overview and instructions
 ```
 
@@ -167,9 +194,9 @@ slot ai/
 
 ## 🧪 Testing and Verification
 
-All 14 automated unit tests can be executed with:
+All 22 automated tests (14 engine tests below + 8 API tests in `tests/test_api.py`) can be executed with:
 ```bash
-./.venv/bin/pytest -v tests/
+pytest -v tests/
 ```
 
 ### Verified Test Cases:

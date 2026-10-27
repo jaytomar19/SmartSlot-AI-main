@@ -12,8 +12,8 @@ import json
 import os
 from typing import Dict, Any, List, Optional, Tuple
 import pandas as pd
-from sample_data import get_default_academic_config, get_infeasible_academic_config
-from constraints import ValidationReport
+from .sample_data import get_default_academic_config, get_infeasible_academic_config
+from .constraints import ValidationReport
 
 DEFAULT_DATA_FILE = "academic_config.json"
 

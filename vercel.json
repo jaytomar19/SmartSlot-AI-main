@@ -5,7 +5,7 @@
   "functions": {
     "api/index.py": {
       "maxDuration": 60,
-      "includeFiles": "{scheduler,constraints,data_manager,sample_data}.py"
+      "includeFiles": "smartslot/**"
     }
   },
   "rewrites": [

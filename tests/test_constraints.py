@@ -13,8 +13,8 @@ Verifies:
 
 import pytest
 import copy
-from sample_data import get_default_academic_config, get_infeasible_academic_config
-from constraints import validate_configuration, validate_timetable
+from smartslot.sample_data import get_default_academic_config, get_infeasible_academic_config
+from smartslot.constraints import validate_configuration, validate_timetable
 
 
 def test_default_config_is_valid():

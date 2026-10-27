@@ -12,10 +12,10 @@ Verifies:
 import pytest
 import io
 import pandas as pd
-from sample_data import get_default_academic_config, get_infeasible_academic_config
-from scheduler import TimetableCSP, run_benchmark_comparison
-from constraints import validate_timetable
-from data_manager import DataManager
+from smartslot.sample_data import get_default_academic_config, get_infeasible_academic_config
+from smartslot.scheduler import TimetableCSP, run_benchmark_comparison
+from smartslot.constraints import validate_timetable
+from smartslot.data_manager import DataManager
 
 
 def test_solver_generates_valid_timetable_for_default_config():

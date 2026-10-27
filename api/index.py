@@ -15,13 +15,13 @@ from typing import Any, Dict, Optional
 from fastapi import Body, FastAPI, HTTPException
 from fastapi.responses import PlainTextResponse
 
-# Core modules live at the project root, one level above api/.
+# The smartslot package lives at the project root, one level above api/.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from sample_data import get_default_academic_config, get_infeasible_academic_config  # noqa: E402
-from data_manager import DataManager  # noqa: E402
-from scheduler import TimetableCSP, run_benchmark_comparison  # noqa: E402
-from constraints import validate_configuration, validate_timetable, Conflict, ValidationReport  # noqa: E402
+from smartslot.sample_data import get_default_academic_config, get_infeasible_academic_config  # noqa: E402
+from smartslot.data_manager import DataManager  # noqa: E402
+from smartslot.scheduler import TimetableCSP, run_benchmark_comparison  # noqa: E402
+from smartslot.constraints import validate_configuration, validate_timetable, Conflict, ValidationReport  # noqa: E402
 
 # Vercel Hobby functions are capped at 60s; keep solver work well inside that.
 MAX_SOLVE_TIMEOUT = 25.0

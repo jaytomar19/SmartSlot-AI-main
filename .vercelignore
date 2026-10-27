@@ -1,11 +1,8 @@
 # Not needed in the Vercel deployment.
-app.py
-.streamlit/
 tests/
+docs/
 pytest.ini
 requirements-dev.txt
-academic_config.json
-ACADEMIC_REPORT.md
 dev_server.py
 .venv/
 venv/

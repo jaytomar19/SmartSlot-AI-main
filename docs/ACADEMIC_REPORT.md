@@ -159,7 +159,7 @@ flowchart TD
     J -- Domains Valid --> K{All Variables Assigned?}
     K -- No --> F
     K -- Yes --> L[Independent Validation Engine: 10 Hard Constraints Audit]
-    L -- Valid --> M[Render Interactive Weekly Grid in Streamlit]
+    L -- Valid --> M[Render Interactive Weekly Grid in Web UI]
     L -- Valid --> N[Export Timetable to CSV & Markdown Audit Report]
 ```
 
