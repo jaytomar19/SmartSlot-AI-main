@@ -21,6 +21,7 @@ const VIEWS = [
   ["viewer", "Timetable Viewer"],
   ["benchmark", "Performance & Algorithm Analysis"],
   ["export", "Export & Reset"],
+  ["docs", "Academic Viva & Algorithm Docs"],
 ];
 
 // Sidebar toggle groups (presentation only).
@@ -28,7 +29,7 @@ const NAV_GROUPS = [
   ["overview", ["dashboard"]],
   ["school info", ["config", "faculty", "subjects", "classrooms"]],
   ["ai planner", ["generator", "conflicts", "viewer", "benchmark"]],
-  ["resources", ["export"]],
+  ["resources", ["export", "docs"]],
 ];
 
 let state = { config: null, timetable: [], validation: null, metrics: null, benchmark: null };
@@ -571,7 +572,7 @@ views.benchmark = () => {
         <div><h3>3. Full AI (MRV + LCV + FC)</h3><p>MRV fail-first variable ordering + LCV value ordering + Forward Checking.</p>${kv(b.full_ai)}</div>
       </div>
       <hr><h2>Performance Comparison Table</h2>${table(summary)}
-      ${alertBox("info", "<strong>Explanation Insight:</strong> Notice how Forward Checking drastically slashes the number of candidate assignments explored and constraint checks by pruning domain options upfront before recursion. MRV ensures the solver addresses the tightest constraints (such as laboratory classes with limited rooms and multi-hour blocks) first!")}`;
+      ${alertBox("info", "<strong>Viva Explanation Insight:</strong> Notice how Forward Checking drastically slashes the number of candidate assignments explored and constraint checks by pruning domain options upfront before recursion. MRV ensures the solver addresses the tightest constraints (such as laboratory classes with limited rooms and multi-hour blocks) first!")}`;
   }
   return `${header("CSP Algorithm Performance & Benchmark Analysis", "Empirical comparison between Basic Backtracking, Forward Checking, and Full AI Heuristics (MRV + LCV + FC)")}
     <p>To demonstrate genuine Constraint Satisfaction Problem solving for an AI course, this benchmark executes three solver configurations on the <strong>exact same institutional dataset</strong>:</p>
@@ -606,6 +607,87 @@ views.export = () => `${header("Export & Configuration Reset", "Export generated
         <label>Import Academic Configuration (.json)<input type="file" accept="application/json,.json" data-action="import-config"></label>
       </div>
     </div>`;
+
+views.docs = () => {
+  const formulation = `<h3>1. CSP Mathematical Formulation</h3>
+    <p>An academic timetable problem is formulated as a Constraint Satisfaction Problem <strong>𝒫 = ⟨X, D, C⟩</strong>.</p>
+    <ul>
+      <li><strong>Variables (X):</strong> Each required weekly session <em>j</em> of subject <em>i</em> is an individual variable V<sub>i,j</sub>.
+        <br><code>X = { V(i,j) | 1 ≤ i ≤ |Subjects|, 1 ≤ j ≤ Sessions(i) }</code></li>
+      <li><strong>Domains (D):</strong> Each variable V has domain D(V) ⊆ Days × TeachingSlots × Rooms. A value v = (d, s, r) is in D(V) if and only if:
+        <ol><li>RoomType(r) = RoomType(V)</li><li>Capacity(r) ≥ ExpectedStudents(V)</li><li>r is active/available</li>
+        <li>Faculty Fac(V) is available on day d and slot s</li><li>For multi-period sessions (k &gt; 1), consecutive slots [s, s+k−1] do not cross breaks.</li></ol></li>
+      <li><strong>Hard Constraints (C):</strong>
+        <ol><li><strong>Faculty Conflict:</strong> ∀ V<sub>a</sub>, V<sub>b</sub> where Fac(V<sub>a</sub>) = Fac(V<sub>b</sub>) and a ≠ b, assigned slots must not overlap.</li>
+        <li><strong>Classroom Conflict:</strong> ∀ V<sub>a</sub>, V<sub>b</sub> where Room(V<sub>a</sub>) = Room(V<sub>b</sub>) and a ≠ b, assigned slots must not overlap.</li>
+        <li><strong>Section Conflict:</strong> ∀ V<sub>a</sub>, V<sub>b</sub> where Sec(V<sub>a</sub>) = Sec(V<sub>b</sub>) and a ≠ b, assigned slots must not overlap.</li>
+        <li><strong>Faculty Workload:</strong> Daily sessions ≤ MaxDaily and weekly sessions ≤ MaxWeekly.</li>
+        <li><strong>Break Constraint:</strong> Zero classes scheduled during designated break periods.</li></ol></li>
+    </ul>
+    <h3>2. Backtracking Search Algorithm Pseudocode</h3>
+    <pre>def BACKTRACKING_SEARCH(csp):
+    return BACKTRACK({}, csp)
+
+def BACKTRACK(assignment, csp):
+    if len(assignment) == len(csp.variables):
+        return assignment
+
+    # Select unassigned variable using MRV with Degree heuristic tie-breaker
+    var = SELECT_UNASSIGNED_VARIABLE(csp, assignment)
+
+    # Order values using Least Constraining Value (LCV)
+    for value in ORDER_DOMAIN_VALUES(var, assignment, csp):
+        if IS_CONSISTENT(var, value, assignment, csp):
+            assignment[var] = value
+
+            # Forward Checking: prune incompatible values from unassigned variables
+            success, pruned = FORWARD_CHECK(var, value, assignment, csp)
+            if success:
+                result = BACKTRACK(assignment, csp)
+                if result is not None:
+                    return result
+
+            # Backtrack: restore pruned domains and remove assignment
+            RESTORE_DOMAINS(pruned, csp)
+            del assignment[var]
+
+    return None  # Trigger backtracking to parent node</pre>`;
+
+  const arch = `<h3>Modular System Architecture</h3>
+    <pre>+------------------------------------------------------------------+
+|          SmartSlot AI - Web Client (public/index.html, app.js)   |
+|   - Single-page UI (Vercel CDN)  - Weekly Grid Visualization     |
+|   - Heuristic Benchmark Panel    - Config kept in localStorage   |
++---------------------------------+--------------------------------+
+                                  | JSON over HTTPS
+                                  v
++------------------------------------------------------------------+
+|        Serverless API (api/index.py, FastAPI on Vercel)          |
++---------------------------------+--------------------------------+
+                                  |
+                +-----------------+-----------------+
+                |                                   |
+                v                                   v
++-------------------------------+   +-------------------------------+
+|  Data Manager                 |   |  AI Scheduling Engine         |
+|  (data_manager.py)            |   |  (scheduler.py)               |
+|  - Input CRUD & Validation    |   |  - CSP Formulation            |
+|  - CSV & Report Export        |   |  - Backtracking Search        |
++---------------+---------------+   |  - MRV & Degree Heuristics    |
+                |                   |  - LCV Value Ordering         |
+                |                   |  - Forward Checking (FC)      |
+                v                   +---------------+---------------+
++-------------------------------+                   |
+|  Independent Constraint       |<------------------+
+|  Validation Engine            |
+|  (constraints.py)             |
+|  - 10 Hard Constraints Audit  |
+|  - Conflict Root-Cause Advice |
++-------------------------------+</pre>`;
+
+  return `${header("Academic Deliverable & Viva Preparation Guide", "Theoretical foundation, CSP mathematical model, pseudocode, and system architecture")}
+    ${tabs("docs", [["CSP Formulation & Pseudocode", formulation], ["System Architecture", arch]])}`;
+};
 
 // ==============================================================================
 // Form submissions & actions

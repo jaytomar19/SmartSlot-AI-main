@@ -185,6 +185,10 @@ SmartSlot-AI/
     - Download comprehensive Audit & Validation Report as Markdown.
     - Quick actions to restore the Northstar Institute dataset or load an intentionally infeasible scenario.
 
+11. **📖 Academic Viva & Algorithm Docs:**
+    - Backtracking pseudocode and CSP formulation.
+    - Modular system architecture diagram.
+
 ---
 
 ## 🧪 Testing and Verification
