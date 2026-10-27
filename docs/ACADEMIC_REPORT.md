@@ -9,7 +9,7 @@
 ## 1. Abstract
 Academic timetable scheduling is an NP-complete combinatorial problem faced by universities worldwide. The challenge lies in assigning classes, faculty members, and student cohorts to classrooms and time slots while satisfying a diverse web of physical and operational constraints. Traditional manual approaches are prone to human error, double-booking, and days of administrative churn.
 
-**SmartSlot AI** addresses this challenge by formulating academic timetabling as a formal **Constraint Satisfaction Problem (CSP)** and implementing an intelligent **Backtracking Search** engine in Python. The system integrates domain-filtering unary pruning, **Minimum Remaining Values (MRV)** with Degree Heuristic tie-breaking for variable selection, **Least Constraining Value (LCV)** for candidate ordering, and **Forward Checking (FC)** for early dead-end detection. An independent verification engine audits generated schedules against 10 hard constraints. The complete solution includes an interactive Streamlit web application providing real-time scheduling, weekly matrix visualizations, clash diagnostics, empirical performance comparisons, and CSV/Markdown export.
+**SmartSlot AI** addresses this challenge by formulating academic timetabling as a formal **Constraint Satisfaction Problem (CSP)** and implementing an intelligent **Backtracking Search** engine in Python. The system integrates domain-filtering unary pruning, **Minimum Remaining Values (MRV)** with Degree Heuristic tie-breaking for variable selection, **Least Constraining Value (LCV)** for candidate ordering, and **Forward Checking (FC)** for early dead-end detection. An independent verification engine audits generated schedules against 10 hard constraints. The complete solution includes an interactive web application deployed on Vercel providing real-time scheduling, weekly matrix visualizations, clash diagnostics, empirical performance comparisons, and CSV/Markdown export.
 
 ---
 
@@ -167,29 +167,29 @@ flowchart TD
 
 ## 8. Source Code Module Overview
 
-1. **`app.py`:**
-   - Streamlit interactive web dashboard.
+1. **`public/` (web UI) and `api/index.py` (serverless API):**
+   - Single-page web dashboard deployed on Vercel, backed by a stateless FastAPI function.
    - Sidebar navigation: Dashboard, Configuration, Faculty Management, Subject Management, Classroom Management, AI Timetable Generator, Conflict Explanations, Weekly Grid Viewer, Performance Benchmarking, Export/Reset, and Viva Documentation.
    - Dynamic multi-dimensional filtering by Section, Faculty, Classroom, and Subject.
 
-2. **`scheduler.py`:**
+2. **`smartslot/scheduler.py`:**
    - CSP formulation classes: `CSPVariable`, `CSPValue`, `SolverMetrics`, `TimetableCSP`.
    - Core recursive backtracking algorithm.
    - Implementations of MRV, Degree Heuristic, LCV, and Forward Checking.
    - Benchmark comparison function (`run_benchmark_comparison`).
 
-3. **`constraints.py`:**
+3. **`smartslot/constraints.py`:**
    - Data structures: `TimeSlot`, `Classroom`, `Faculty`, `Subject`, `Conflict`, `ValidationReport`.
    - Pre-scheduling configuration feasibility checker (`validate_configuration`).
    - Decoupled, independent timetable verification pass (`validate_timetable`).
    - Root-cause conflict diagnosis and actionable advice generator.
 
-4. **`data_manager.py`:**
+4. **`smartslot/data_manager.py`:**
    - Configuration persistence (JSON loading/saving).
    - CRUD management with input validation for classrooms, faculty, subjects, and time slots.
    - DataFrame transformations and CSV / Markdown audit report exports.
 
-5. **`sample_data.py`:**
+5. **`smartslot/sample_data.py`:**
    - Ready-to-run fictional dataset for **Northstar Institute of Technology (NIT)**.
    - Separate intentionally infeasible test case for failure diagnosis demonstration.
 
