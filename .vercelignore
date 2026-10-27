@@ -1,0 +1,13 @@
+# Not needed in the Vercel deployment.
+app.py
+.streamlit/
+tests/
+pytest.ini
+requirements-dev.txt
+academic_config.json
+ACADEMIC_REPORT.md
+dev_server.py
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
