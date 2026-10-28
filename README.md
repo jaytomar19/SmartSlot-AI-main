@@ -1,5 +1,5 @@
 # SmartSlot AI: Intelligent Academic Timetable Generator
-### Using Constraint Satisfaction Problems (CSP) and Backtracking Search
+### Using Constraint Satisfaction Problems (CSP) and Backtracking Search Problems
 
 SmartSlot AI is an end-to-end, locally runnable academic timetable scheduling platform designed for an **Artificial Intelligence Course (AISC)**. The system formulates university scheduling as a formal **Constraint Satisfaction Problem (CSP)** and solves it using **Backtracking Search** enhanced with **Minimum Remaining Values (MRV)**, **Least Constraining Value (LCV)**, and **Forward Checking (FC)**.
 
