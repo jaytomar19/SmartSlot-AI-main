@@ -9,7 +9,7 @@ The project demonstrates full software engineering and AI principles: genuine sc
 
 ## 🏛️ Fictional Institution Dataset
 The application is pre-configured with a complete demonstration dataset for the fictional institution:
-- **Institution:** Northstar Institute of Technology (NIT)
+- **Institution:** Manipal University Jaipur
 - **Department:** Department of Computer Science & Engineering
 - **Term:** Fall Semester 2026-27
 - **Working Days:** Monday through Friday (5 days)
@@ -21,26 +21,7 @@ The application is pre-configured with a complete demonstration dataset for the 
 
 ---
 
-## 🚀 Deploying to Vercel
 
-The production app is a static single-page UI (`public/`) backed by a stateless FastAPI serverless function (`api/index.py`) that wraps the CSP engine.
-
-1. Push this repository to GitHub.
-2. In Vercel, click **Add New → Project**, import the repo, and keep the defaults (Framework Preset: **Other**). `vercel.json` already configures everything.
-3. Click **Deploy**.
-
-Or deploy from the CLI:
-```bash
-npm i -g vercel
-vercel          # preview deployment
-vercel --prod   # production deployment
-```
-
-**How state works on Vercel:** serverless functions have no persistent disk, so the browser stores the academic configuration, timetable, and reports in `localStorage` and sends the config with each API request. Use **Export & Reset → Download Academic Configuration** to back up or move a configuration between browsers.
-
-API docs are served at `/api/docs` on any deployment.
-
----
 
 ## ⚡ Local Development
 
@@ -216,10 +197,4 @@ pytest -v tests/
 
 ---
 
-## 🎓 Academic Viva Highlights
 
-- **NP-Completeness:** Timetabling is NP-complete; exhaustive enumeration is $O(d^n)$.
-- **MRV (Fail-First):** Choosing the variable with the smallest remaining domain detects dead ends at shallow depths.
-- **LCV (Fail-Last):** Choosing the value that leaves the most options for neighbors avoids unnecessary backtracks.
-- **Forward Checking:** Proactively reduces neighbor domains after every assignment, terminating immediately if a domain becomes empty.
-- **Independent Validation:** Separates the search engine from the verification logic to guarantee 100% clash-free schedules.
