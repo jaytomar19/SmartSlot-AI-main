@@ -197,4 +197,38 @@ pytest -v tests/
 
 ---
 
+## CSP Formulation
+
+SmartSlot AI models timetable generation as a Constraint Satisfaction Problem (CSP):
+
+**P = ⟨V, D, C⟩**
+
+### V: Variables
+Each weekly class session of a subject. A multi-period lab is treated as one block of consecutive periods.
+
+### D: Domains
+The possible `(Day, TimeSlot, Room)` combinations for each session. Domains are filtered upfront using:
+- Faculty availability
+- Room type (lab or lecture)
+- Room seating capacity
+
+### C: Constraints
+Ten hard constraints must hold for a valid timetable:
+
+| # | Constraint |
+|---|------------|
+| 1 | No faculty member is assigned to two classes at the same time |
+| 2 | No classroom is booked for two classes at the same time |
+| 3 | No student section has two classes at the same time |
+| 4 | Each class is assigned to a qualified and available faculty member |
+| 5 | Room type matches the course (labs need lab rooms) |
+| 6 | Room capacity is at least the number of students |
+| 7 | Multi-period sessions fit entirely within teaching hours |
+| 8 | Faculty availability schedules are respected |
+| 9 | No class overlaps the lunch break |
+| 10 | All required curriculum hours are scheduled |
+
+### Solution
+A complete assignment of a `(Day, TimeSlot, Room)` to every session that violates none of the 10 constraints.
+
 
